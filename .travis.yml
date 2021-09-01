@@ -1,0 +1,21 @@
+language: java
+jdk:
+  - openjdk11
+script:
+  - ./mvnw clean install
+
+services:
+  - docker
+
+jobs:
+  include:
+    - stage: build_java_package
+      script:
+        - mvn clean package
+
+    - stage: build_docker
+      script:
+        - docker build -f Dockerfile -t identity:latest .
+        - echo "$DOCKER_HUB_ACCESS_TOKEN" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
+        - docker tag user-client "$DOCKER_HUB_USERNAME"/identity
+        - docker push "$DOCKER_HUB_USERNAME"/identity
