@@ -16,6 +16,6 @@ jobs:
     - stage: build_docker
       script:
         - docker build -f Dockerfile -t identity:latest .
-        - echo "$DOCKER_HUB_ACCESS_TOKEN" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
+        - echo $DOCKERHUB_PASSWORD | docker login --username "$DOCKERHUB_USERNAME" --password-stdin
         - docker tag identity "$DOCKER_HUB_USERNAME"/identity
         - docker push "$DOCKER_HUB_USERNAME"/identity
